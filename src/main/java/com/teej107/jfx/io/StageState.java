@@ -10,14 +10,12 @@ import java.util.prefs.Preferences;
  */
 public class StageState
 {
-	private static final Dimension MAX_BOUNDS = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().getSize();
-
 	protected static final String STAGE_X = "stage x";
 	protected static final String STAGE_Y = "stage y";
 	protected static final String STAGE_WIDTH = "stage width";
 	protected static final String STAGE_HEIGHT = "stage height";
 	protected static final String STAGE_MAXIMIZE = "stage maximize";
-
+	private static final Rectangle MAX_BOUNDS = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 	protected Preferences prefs;
 	protected Double defX, defY, defWidth, defHeight;
 
@@ -188,6 +186,17 @@ public class StageState
 	}
 
 	@Override
+	public int hashCode()
+	{
+		int result = prefs != null ? prefs.hashCode() : 0;
+		result = 31 * result + (defX != null ? defX.hashCode() : 0);
+		result = 31 * result + (defY != null ? defY.hashCode() : 0);
+		result = 31 * result + (defWidth != null ? defWidth.hashCode() : 0);
+		result = 31 * result + (defHeight != null ? defHeight.hashCode() : 0);
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object o)
 	{
 		if (this == o)
@@ -208,14 +217,26 @@ public class StageState
 		return defHeight != null ? defHeight.equals(that.defHeight) : that.defHeight == null;
 	}
 
-	@Override
-	public int hashCode()
+	public StageState ensureWithinBounds()
 	{
-		int result = prefs != null ? prefs.hashCode() : 0;
-		result = 31 * result + (defX != null ? defX.hashCode() : 0);
-		result = 31 * result + (defY != null ? defY.hashCode() : 0);
-		result = 31 * result + (defWidth != null ? defWidth.hashCode() : 0);
-		result = 31 * result + (defHeight != null ? defHeight.hashCode() : 0);
-		return result;
+		if (getX() < MAX_BOUNDS.x)
+			setX(MAX_BOUNDS.x);
+
+		if (getWidth() > MAX_BOUNDS.width)
+			setWidth(MAX_BOUNDS.width);
+
+		if (getX() + getWidth() > MAX_BOUNDS.x + MAX_BOUNDS.width)
+			setX(MAX_BOUNDS.x + MAX_BOUNDS.width - getWidth());
+
+		if (getY() < MAX_BOUNDS.y)
+			setY(MAX_BOUNDS.y);
+
+		if (getHeight() > MAX_BOUNDS.height)
+			setHeight(MAX_BOUNDS.height);
+
+		if (getY() + getHeight() > MAX_BOUNDS.y + MAX_BOUNDS.height)
+			setY(MAX_BOUNDS.y + MAX_BOUNDS.height - getHeight());
+
+		return this;
 	}
 }

@@ -1,7 +1,5 @@
 package com.teej107.swing.io;
 
-import com.sun.istack.internal.Nullable;
-
 import java.awt.*;
 import java.util.Objects;
 import java.util.prefs.Preferences;
@@ -86,7 +84,7 @@ public class WindowState
 	 *
 	 * @param defaultDim the {@link Dimension} to use as default or null to specify no default
 	 */
-	public void setDefaultSize(@Nullable Dimension defaultDim)
+	public void setDefaultSize(Dimension defaultDim)
 	{
 		this.defaultDim = defaultDim;
 	}
@@ -106,7 +104,7 @@ public class WindowState
 	 *
 	 * @param defaultPoint the {@link Point} to use as default or null to specify no default
 	 */
-	public void setDefaultLocation(@Nullable Point defaultPoint)
+	public void setDefaultLocation(Point defaultPoint)
 	{
 		this.defaultPoint = defaultPoint;
 	}
